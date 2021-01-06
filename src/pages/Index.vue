@@ -1,49 +1,37 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="q-pa-lg">
+    <div class="row justify-center">
+      <div class="col-md-8 col-sm-12 col-xs-12">
+        <q-card>
+          <q-list separator bordered>
+            <q-item-label header>People</q-item-label>
+            <q-separator />
+            <q-item v-for="(task, index) in people" :key="`task-${index}`">
+              <q-item-section>
+                <q-item-label>{{ task.name }}</q-item-label>
+                <q-item-label caption>{{ task.email }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
-
 <script lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/CompositionComponent.vue';
-import { defineComponent, ref } from '@vue/composition-api';
-
+import { defineComponent, ref, reactive, computed } from "@vue/composition-api";
+import { State, Method } from "components/models";
 export default defineComponent({
-  name: 'PageIndex',
-  components: { ExampleComponent },
-  setup() {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
-    const meta = ref<Meta>({
-      totalCount: 1200
-    });
-    return { todos, meta };
+  name: "PageIndex",
+  async preFetch({ store }: any) {
+    const { data } = await store.$axios.get("users");
+    return store.commit("general/setPageData", { people: data });
+  },
+  setup(_, { root }:any) {
+    const methods: Method = {};
+    const people = ref<any>(computed(() => root.$store.getters['pageData']));
+
+    return { people, methods };
   }
 });
 </script>
