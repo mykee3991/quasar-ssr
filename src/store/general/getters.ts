@@ -3,7 +3,7 @@ import { StateInterface } from '../index';
 import { GeneralStateInterface } from './state';
 
 const getters: GetterTree<GeneralStateInterface, StateInterface> = {
-  pageData ({state}:any) {
+  pageData (state) {
     return state.pageData
   }
 };

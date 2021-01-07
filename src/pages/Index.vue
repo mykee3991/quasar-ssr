@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, reactive, computed } from "@vue/composition-api";
-import { State, Method } from "components/models";
+import { State } from "components/models";
 export default defineComponent({
   name: "PageIndex",
   async preFetch({ store }: any) {
@@ -28,10 +28,8 @@ export default defineComponent({
     return store.commit("general/setPageData", { people: data });
   },
   setup(_, { root }:any) {
-    const methods: Method = {};
-    const people = ref<any>(computed(() => root.$store.getters['pageData']));
-
-    return { people, methods };
+    const people = computed(() => root.$store.getters['general/pageData'].people);
+    return { people };
   }
 });
 </script>
